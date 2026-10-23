@@ -25,15 +25,27 @@ import { buttonClasses } from "@/lib/button"
       </span>
     </a>
   </div>
+  {/* App screenshot: Astro crops it to its top 5:3 at build time. The
+    gradient fades the cut edge into the screenshot's own background
+    (#f8f8f6), which reads well in both themes. */}
   {heroHeader.image && (
-    <div class="flex flex-1 justify-center lg:justify-end">
+    <div class="relative mt-4 w-full max-w-4xl self-center overflow-hidden rounded-xl border shadow-2xl">
       <Image
         src={heroHeader.image}
         alt={heroHeader.imageAlt ?? ""}
-        width={500}
-        densities={[1, 2]}
+        width={1792}
+        height={1075}
+        fit="cover"
+        position="top"
+        widths={[640, 960, 1280, 1792]}
+        sizes="(width >= 60rem) 56rem, calc(100vw - 4rem)"
         priority
+        class="h-auto w-full"
       />
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t from-[#f8f8f6]"
+      ></div>
     </div>
   )}
 </section>

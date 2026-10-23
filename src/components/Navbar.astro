@@ -1,6 +1,6 @@
 ---
+import Logo from "@/components/Logo.astro"
 import ThemeToggle from "@/components/ThemeToggle.astro"
-import { siteConfig } from "@/config/site"
 import { settings } from "@/config/settings"
 import { navLinks } from "@/lib/links"
 import { pagePath } from "@/lib/url"
@@ -15,10 +15,11 @@ const currentPath = pagePath(Astro.url.pathname)
   >
     <div>
       <div class="flex items-center justify-between py-3 md:block md:py-5">
-        <a href="/">
-          <span class="block text-2xl font-bold duration-200 lg:hover:scale-[1.10]">
-            {siteConfig.name}
-          </span>
+        <a href="/" class="inline-block">
+          <Logo
+            loading="eager"
+            class="transition-transform duration-200 lg:hover:scale-[1.10]"
+          />
         </a>
         <div class="flex gap-1 md:hidden">
           <button

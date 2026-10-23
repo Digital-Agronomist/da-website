@@ -1,5 +1,5 @@
 import type { HeroHeader, ContentSection } from "@/types"
-import heroImage from "@/assets/hero-img.png"
+import heroImage from "@/assets/hero-bot.webp"
 import featuresImage from "@/assets/features-img.png"
 
 /* ====================
@@ -12,7 +12,7 @@ export const heroHeader: HeroHeader = {
   header: `Transforming Agriculture with Data-Driven Insights`,
   subheader: `Empowering farmers to enhance productivity, sustainability, and profitability through intelligent, science-backed solutions.`,
   image: heroImage,
-  imageAlt: `Corn plant growth stages`,
+  imageAlt: `The Digital Agronomist chatbot answering which factors most influence sugarcane yield (TCH) and sucrose, citing its sources`,
 }
 
 export const featureCards: ContentSection = {

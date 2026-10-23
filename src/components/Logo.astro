@@ -1,0 +1,26 @@
+---
+import { Image } from "astro:assets"
+import logo from "@/assets/logo.png"
+import { siteConfig } from "@/config/site"
+
+interface Props {
+  class?: string
+  loading?: "eager" | "lazy"
+}
+
+const { class: className, loading = "lazy" } = Astro.props
+---
+
+<!-- White tile, as in the chatbot: the dark green mark needs a light ground in dark mode. -->
+<span
+  class:list={["inline-flex rounded-lg border bg-white px-2 py-1.5", className]}
+>
+  <Image
+    src={logo}
+    alt={siteConfig.name}
+    height={32}
+    densities={[1, 2]}
+    loading={loading}
+    class="h-8 w-auto"
+  />
+</span>
