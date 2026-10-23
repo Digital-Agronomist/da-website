@@ -1,0 +1,16 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import HeadingText from "@/components/HeadingText.astro"
+import { buttonClasses } from "@/lib/button"
+---
+
+<BaseLayout title="Page not found" noindex>
+  <main class="container flex flex-col items-center gap-8 py-20 text-center">
+    <HeadingText level="h1" subtext="This page could not be found.">
+      404
+    </HeadingText>
+    <a href="/" class={buttonClasses()}>
+      Back to home
+    </a>
+  </main>
+</BaseLayout>

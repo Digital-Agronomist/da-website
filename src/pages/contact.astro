@@ -1,0 +1,20 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import HeadingText from "@/components/HeadingText.astro"
+import ContactForm from "@/components/sections/ContactForm.astro"
+import { siteConfig } from "@/config/site"
+---
+
+<BaseLayout
+  title="Contact"
+  description={`Send ${siteConfig.name} a message by email.`}
+>
+  <main class="container flex flex-col items-center py-8">
+    <div class="flex flex-col items-center space-y-2 text-center">
+      <HeadingText level="h1" subtext="Send a message through email">
+        Contact
+      </HeadingText>
+    </div>
+    <ContactForm />
+  </main>
+</BaseLayout>

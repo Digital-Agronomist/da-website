@@ -1,0 +1,125 @@
+---
+import { contactConfig } from "@/config/site"
+import { buttonClasses } from "@/lib/button"
+
+const fieldClasses =
+  "flex w-full rounded-md border border-input px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+// Block labels: Tailwind v4's space-y margin is ignored on inline elements.
+// leading-6 keeps the label row as tall as the v3 inline label was.
+const labelClasses = "block text-sm leading-6 font-medium"
+---
+
+<!--
+  Without JavaScript the browser validates `required` and submits a GET to the
+  mailto: action. The script below adds inline errors and proper encoding.
+-->
+<form
+  id="contact-form"
+  action={`mailto:${contactConfig.email}`}
+  method="get"
+  class="w-full space-y-4 py-8 sm:w-[24rem]"
+>
+  <div class="space-y-2" data-field>
+    <label for="contact-subject" class={labelClasses}>
+      Subject
+    </label>
+    <input
+      id="contact-subject"
+      name="subject"
+      required
+      maxlength="200"
+      placeholder="Enter the subject"
+      data-error="Subject is required"
+      class={`h-10 bg-background ${fieldClasses}`}
+    />
+  </div>
+  <div class="space-y-2" data-field>
+    <label for="contact-body" class={labelClasses}>
+      Message
+    </label>
+    <textarea
+      id="contact-body"
+      name="body"
+      required
+      maxlength="5000"
+      placeholder="Enter your message"
+      aria-describedby="contact-body-description"
+      data-error="Message is required"
+      class={`min-h-[80px] bg-transparent ${fieldClasses}`}
+    ></textarea>
+    <p id="contact-body-description" class="text-sm text-muted-foreground">
+      Your message will be sent through email
+    </p>
+  </div>
+  <button type="submit" class={`mt-4 w-full ${buttonClasses()}`}>
+    Submit
+  </button>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("#contact-form")
+
+  if (form) {
+    const fields = [
+      ...form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+        "[data-error]"
+      ),
+    ]
+    // Like react-hook-form: validate on submit, then on every change.
+    let submitted = false
+    form.noValidate = true
+
+    const validate = (field: HTMLInputElement | HTMLTextAreaElement) => {
+      const valid = field.value.trim() !== ""
+      const errorId = `${field.id}-error`
+      const describedBy = (field.getAttribute("aria-describedby") ?? "")
+        .split(" ")
+        .filter((id) => id && id !== errorId)
+      let error = document.getElementById(errorId)
+
+      if (valid) {
+        error?.remove()
+        field.removeAttribute("aria-invalid")
+      } else {
+        if (!error) {
+          error = document.createElement("p")
+          error.id = errorId
+          error.className = "text-sm font-medium text-destructive"
+          error.textContent = field.dataset.error ?? "Required"
+          field.closest("[data-field]")?.append(error)
+        }
+        field.setAttribute("aria-invalid", "true")
+        describedBy.push(errorId)
+      }
+      if (describedBy.length) {
+        field.setAttribute("aria-describedby", describedBy.join(" "))
+      } else {
+        field.removeAttribute("aria-describedby")
+      }
+      field.labels?.[0]?.classList.toggle("text-destructive", !valid)
+      return valid
+    }
+
+    form.addEventListener("input", (event) => {
+      const field = fields.find((f) => f === event.target)
+      if (submitted && field) validate(field)
+    })
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault()
+      submitted = true
+      const invalid = fields.filter((field) => !validate(field))
+      if (invalid.length) {
+        invalid[0].focus()
+        return
+      }
+
+      const query = fields
+        .map((f) => `${f.name}=${encodeURIComponent(f.value.trim())}`)
+        .join("&")
+      window.location.href = `${form.getAttribute("action")}?${query}`
+      form.reset()
+      submitted = false
+    })
+  }
+</script>

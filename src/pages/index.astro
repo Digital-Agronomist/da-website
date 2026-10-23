@@ -1,0 +1,39 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import Hero from "@/components/sections/Hero.astro"
+import FeatureCards from "@/components/sections/FeatureCards.astro"
+import Features from "@/components/sections/Features.astro"
+import { siteConfig } from "@/config/site"
+
+const home = new URL("/", Astro.site).href
+
+// https://developers.google.com/search/docs/appearance/site-names
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${home}#website`,
+      url: home,
+      name: siteConfig.name,
+      description: siteConfig.description,
+      inLanguage: "en",
+      publisher: { "@id": `${home}#publisher` },
+    },
+    {
+      "@type": "Organization",
+      "@id": `${home}#publisher`,
+      name: siteConfig.publisher.name,
+      url: siteConfig.publisher.url,
+    },
+  ],
+}
+---
+
+<BaseLayout structuredData={structuredData}>
+  <main>
+    <Hero />
+    <FeatureCards />
+    <Features />
+  </main>
+</BaseLayout>

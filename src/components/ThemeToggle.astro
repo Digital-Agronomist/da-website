@@ -1,0 +1,180 @@
+---
+import { icons } from "@/icons"
+import { buttonClasses } from "@/lib/button"
+
+interface Props {
+  id: string
+}
+
+const { id } = Astro.props
+const Sun = icons.sun
+const Moon = icons.moon
+const themes = [
+  { value: "light", label: "Light" },
+  { value: "dark", label: "Dark" },
+  { value: "system", label: "System" },
+]
+---
+
+<div class="relative" data-theme-toggle>
+  <button
+    type="button"
+    class={buttonClasses({ variant: "outline", size: "icon" })}
+    aria-haspopup="menu"
+    aria-expanded="false"
+    aria-controls={id}
+    data-theme-trigger
+  >
+    <Sun
+      aria-hidden="true"
+      class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90"
+    />
+    <Moon
+      aria-hidden="true"
+      class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
+    />
+    <span class="sr-only">Toggle theme</span>
+  </button>
+  <div
+    id={id}
+    role="menu"
+    aria-label="Theme"
+    tabindex="-1"
+    hidden
+    class="absolute top-full right-0 z-50 mt-1 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md outline-hidden"
+  >
+    {themes.map((theme) => (
+      <button
+        type="button"
+        role="menuitemradio"
+        aria-checked="false"
+        tabindex="-1"
+        data-theme-value={theme.value}
+        class="relative flex w-full cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-hidden transition-colors select-none hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+      >
+        {theme.label}
+      </button>
+    ))}
+  </div>
+</div>
+
+<script>
+  // The theme itself is applied by the inline script in BaseLayout, which
+  // listens for "theme-change".
+  type Theme = "light" | "dark" | "system"
+
+  function storedTheme(): Theme {
+    try {
+      const theme = localStorage.getItem("theme")
+      return theme === "light" || theme === "dark" ? theme : "system"
+    } catch {
+      return "system"
+    }
+  }
+
+  function setTheme(theme: Theme) {
+    try {
+      localStorage.setItem("theme", theme)
+    } catch {
+      // Storage can be unavailable (private mode); the choice lasts this page.
+    }
+    document.dispatchEvent(new CustomEvent("theme-change", { detail: theme }))
+  }
+
+  for (const root of document.querySelectorAll<HTMLElement>(
+    "[data-theme-toggle]"
+  )) {
+    const trigger = root.querySelector<HTMLButtonElement>(
+      "[data-theme-trigger]"
+    )
+    const menu = root.querySelector<HTMLElement>("[role=menu]")
+    if (!trigger || !menu) continue
+    const items = [
+      ...menu.querySelectorAll<HTMLButtonElement>("[data-theme-value]"),
+    ]
+
+    // A pointer opens the menu with focus on the menu itself (no item
+    // highlighted); the keyboard moves focus to the first or last item.
+    const open = (focus: "menu" | "first" | "last") => {
+      const current = storedTheme()
+      for (const item of items) {
+        item.setAttribute(
+          "aria-checked",
+          String(item.dataset.themeValue === current)
+        )
+      }
+      menu.hidden = false
+      trigger.setAttribute("aria-expanded", "true")
+      const target =
+        focus === "first" ? items[0] : focus === "last" ? items.at(-1) : menu
+      target?.focus()
+    }
+    const close = (returnFocus: boolean) => {
+      if (menu.hidden) return
+      menu.hidden = true
+      trigger.setAttribute("aria-expanded", "false")
+      if (returnFocus) trigger.focus()
+    }
+    const focusItem = (offset: number) => {
+      const index = items.indexOf(document.activeElement as HTMLButtonElement)
+      const next =
+        index === -1
+          ? offset > 0
+            ? 0
+            : items.length - 1
+          : (index + offset + items.length) % items.length
+      items[next]?.focus()
+    }
+
+    trigger.addEventListener("click", (event) => {
+      // detail is 0 when Enter or Space activated the button.
+      if (menu.hidden) open(event.detail === 0 ? "first" : "menu")
+      else close(true)
+    })
+    trigger.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault()
+        open(event.key === "ArrowDown" ? "first" : "last")
+      }
+    })
+    menu.addEventListener("click", (event) => {
+      const item =
+        event.target instanceof Element
+          ? event.target.closest<HTMLButtonElement>("[data-theme-value]")
+          : null
+      if (!item) return
+      setTheme(item.dataset.themeValue as Theme)
+      close(true)
+    })
+    menu.addEventListener("keydown", (event) => {
+      switch (event.key) {
+        case "ArrowDown":
+          event.preventDefault()
+          focusItem(1)
+          break
+        case "ArrowUp":
+          event.preventDefault()
+          focusItem(-1)
+          break
+        case "Home":
+          event.preventDefault()
+          items[0]?.focus()
+          break
+        case "End":
+          event.preventDefault()
+          items.at(-1)?.focus()
+          break
+        case "Escape":
+          event.preventDefault()
+          close(true)
+          break
+        case "Tab":
+          close(false)
+          break
+      }
+    })
+    document.addEventListener("pointerdown", (event) => {
+      if (!root.contains(event.target as Node)) close(false)
+    })
+  }
+</script>

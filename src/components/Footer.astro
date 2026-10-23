@@ -1,0 +1,40 @@
+---
+import { siteConfig } from "@/config/site"
+import { navLinks } from "@/lib/links"
+---
+
+<footer class="mt-auto">
+  <div class="mx-auto w-full max-w-(--breakpoint-xl) p-6 md:py-8">
+    <div class="sm:flex sm:items-center sm:justify-between">
+      <a href="/">
+        <span class="mb-2 block text-2xl font-bold sm:mb-0">
+          {siteConfig.name}
+        </span>
+      </a>
+      <nav aria-label="Footer">
+        <ul class="mb-6 flex flex-wrap items-center text-primary opacity-60 sm:mb-0">
+          {navLinks.map((link) => (
+            <li>
+              <a href={link.path} class="mr-4 hover:underline md:mr-6">
+                {link.route}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+    <hr class="my-6 text-muted-foreground sm:mx-auto lg:my-8" />
+    <span class="block text-sm text-muted-foreground sm:text-center">
+      © {new Date().getFullYear()}{" "}
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href={siteConfig.publisher.url}
+        class="hover:underline"
+      >
+        {siteConfig.publisher.name}
+      </a>
+      . All Rights Reserved.
+    </span>
+  </div>
+</footer>

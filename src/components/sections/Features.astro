@@ -1,0 +1,46 @@
+---
+import { Image } from "astro:assets"
+import HeadingText from "@/components/HeadingText.astro"
+import { features } from "@/config/contents"
+import { icons } from "@/icons"
+---
+
+<section class="container space-y-8 py-12 lg:py-20" id="features">
+  {(features.header || features.subheader) && (
+    <HeadingText subtext={features.subheader} class="text-center">
+      {features.header}
+    </HeadingText>
+  )}
+  <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+    <div class="grid grid-cols-1 gap-8">
+      {features.content.map((card) => {
+        const Icon = card.icon && icons[card.icon]
+
+        return (
+          <div class="flex flex-col items-center gap-2 text-center md:flex-row md:gap-8 md:text-left">
+            <div class="flex">
+              {Icon && <Icon aria-hidden="true" class="size-24" />}
+            </div>
+            <div class="flex-1">
+              <h3 class="text-2xl font-semibold">{card.text}</h3>
+              <p class="font-light text-muted-foreground md:text-lg">
+                {card.subtext}
+              </p>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+    {features.image && (
+      <div class="relative hidden overflow-hidden md:block md:border">
+        <Image
+          src={features.image}
+          alt={features.imageAlt ?? ""}
+          widths={[400, features.image.width]}
+          sizes="(width >= 1400px) 652px, (width >= 48rem) calc(50vw - 3rem), 100vw"
+          class="absolute inset-0 size-full object-cover object-top-left"
+        />
+      </div>
+    )}
+  </div>
+</section>

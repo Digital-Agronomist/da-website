@@ -1,0 +1,19 @@
+---
+interface Props {
+  subtext?: string
+  class?: string
+  /** Use "h1" when the heading titles the whole page. */
+  level?: "h1" | "h2"
+}
+
+const { subtext, class: className, level: Heading = "h2" } = Astro.props
+---
+
+<div class:list={["space-y-2", className]}>
+  <Heading class="text-3xl font-bold text-primary lg:text-4xl">
+    <slot />
+  </Heading>
+  {subtext && (
+    <p class="font-light text-muted-foreground lg:text-lg">{subtext}</p>
+  )}
+</div>

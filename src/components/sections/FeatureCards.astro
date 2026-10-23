@@ -1,0 +1,34 @@
+---
+import HeadingText from "@/components/HeadingText.astro"
+import { featureCards } from "@/config/contents"
+import { icons } from "@/icons"
+---
+
+<section class="bg-slate-50 dark:bg-slate-900">
+  <div class="container space-y-8 py-12 text-center lg:py-20">
+    {(featureCards.header || featureCards.subheader) && (
+      <HeadingText subtext={featureCards.subheader}>
+        {featureCards.header}
+      </HeadingText>
+    )}
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {featureCards.content.map((card) => {
+        const Icon = card.icon && icons[card.icon]
+
+        return (
+          <div class="flex grow flex-col items-center justify-between gap-4 rounded-lg border bg-card p-8 text-card-foreground shadow-xs dark:bg-secondary">
+            <div class="flex">
+              {Icon && <Icon aria-hidden="true" class="size-24" />}
+            </div>
+            <div class="space-y-2">
+              <h3 class="text-2xl leading-none font-semibold tracking-tight">
+                {card.text}
+              </h3>
+              <p class="text-sm text-muted-foreground">{card.subtext}</p>
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  </div>
+</section>

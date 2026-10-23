@@ -1,75 +1,59 @@
-# Next Landing
+# The Digital Agronomist website
 
-Easy to setup, customizable, quick, and responsive landing page starter built with [Next.js](https://nextjs.org) and [shadcn/ui](https://ui.shadcn.com).
+Landing page for [The Digital Agronomist](https://www.agronomist.digital), built with
+[Astro](https://astro.build) and [Tailwind CSS](https://tailwindcss.com), deployed on
+[Vercel](https://vercel.com).
 
-- [Live Preview](https://nextlanding.rdev.pro)
+The site is fully static: every page is prerendered at build time and ships about 2 kB of
+JavaScript (mobile menu, theme menu, contact form).
 
-## Preview
+## Getting started
 
-![Next Landing Preview](public/og.jpg)
-
-## Getting Started
-
-Follow the instructions based on the package manager you use (npm/pnpm)
-
-### Start by setting up a new project
-
-```bash
-npx degit redpangilinan/next-shadcn-landing my-app
-```
-
-```bash
-pnpm dlx degit redpangilinan/next-shadcn-landing my-app
-```
-
-### Change package.json name
-
-```json
-"name": "next-shadcn-landing",
-```
-
-to
-
-```json
-"name": "my-app",
-```
-
-### Install dependencies
-
-```bash
-npm install
-```
+Requires Node.js 22.23.4 or newer and pnpm.
 
 ```bash
 pnpm install
 ```
 
-### Run the newly created app
-
 ```bash
-npm run dev
+pnpm dev
 ```
 
-```bash
-pnpm run dev
-```
+Open [http://localhost:4321](http://localhost:4321).
 
-### That's it
+| Command        | What it does                                                |
+| -------------- | ----------------------------------------------------------- |
+| `pnpm dev`     | Start the dev server                                        |
+| `pnpm build`   | Type-check (`astro check`) and build the site to `dist/`    |
+| `pnpm preview` | Serve the production build locally (needed to test the CSP) |
+| `pnpm check`   | Type-check only                                             |
+| `pnpm format`  | Format the code with Prettier                               |
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things are
 
-Modify the content and website configurations in the `/config` folder.
+- `src/config`: site name, URL, contact email, page copy and settings. See its README.
+- `src/pages`: one file per route (`index`, `contact`, `404`, `robots.txt`).
+- `src/components`: layout pieces and page sections.
+- `src/assets`: images optimized by Astro at build time (WebP, responsive sizes).
+- `src/icons`: SVG icons, rendered inline.
+- `public`: files served as-is (favicons, Open Graph image).
+- `src/lib/links.ts`: navigation links.
 
-Modify the layout and routes in the `/app` folder.
+## Deployment
 
-Change navigation links by modifying `lib/links.ts` file.
+Vercel builds every push: `main` goes to production, other branches get preview URLs.
+`vercel.json` pins the Astro framework preset and sets the security headers. No adapter is
+needed because the site is static; add `@astrojs/vercel` only for on-demand rendering,
+Vercel Image Optimization or Web Analytics.
 
+## SEO and security
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Canonical URLs, Open Graph and Twitter tags, JSON-LD (`WebSite`), `sitemap-index.xml` and
+  `robots.txt` are generated from `src/config/site.ts`.
+- Astro emits a per-page Content Security Policy with hashes for every inline script and
+  style (`security.csp` in `astro.config.mjs`). `vercel.json` adds the headers a `<meta>`
+  policy cannot carry (`frame-ancestors`), plus `nosniff`, `Referrer-Policy` and
+  `Permissions-Policy`.
 
 ## License
 
