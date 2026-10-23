@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar.astro"
 import Footer from "@/components/Footer.astro"
 import { siteConfig } from "@/config/site"
 import { settings } from "@/config/settings"
+import { pagePath } from "@/lib/url"
 
 interface Props {
   title?: string
@@ -23,7 +24,7 @@ const {
 } = Astro.props
 
 const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href
+const canonicalUrl = new URL(pagePath(Astro.url.pathname), Astro.site).href
 const ogImage = new URL("/og.png", Astro.site).href
 // Escape "<" so content can never close the <script> element early.
 const jsonLd =

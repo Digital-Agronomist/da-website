@@ -3,8 +3,9 @@ import ThemeToggle from "@/components/ThemeToggle.astro"
 import { siteConfig } from "@/config/site"
 import { settings } from "@/config/settings"
 import { navLinks } from "@/lib/links"
+import { pagePath } from "@/lib/url"
 
-const currentPath = Astro.url.pathname
+const currentPath = pagePath(Astro.url.pathname)
 ---
 
 <header class="select-none">
