@@ -9,7 +9,7 @@ JavaScript (mobile menu, theme menu, contact form).
 
 ## Getting started
 
-Requires Node.js 22.23.4 or newer and pnpm.
+Requires Node.js 24.22.1 or newer and pnpm.
 
 ```bash
 pnpm install
