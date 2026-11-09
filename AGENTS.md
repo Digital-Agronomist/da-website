@@ -93,7 +93,7 @@ public/         favicons and og.png, served as-is
 
 Vercel project `agronomist-digital` (linked in the ignored `.vercel/` folder) builds every push:
 `main` is production at https://www.agronomist.digital (the apex domain redirects to `www`), and
-every other branch gets a preview URL. `vercel.json` pins the Astro framework preset. There is no
+every other branch gets a preview URL (`agronomist-digital-git-<branch>-roadevs-projects.vercel.app`). Preview URLs sit behind Vercel Deployment Protection: without a Vercel login they answer 302 to `vercel.com/sso-api`, so check them in a signed-in browser. `vercel.json` pins the Astro framework preset. There is no
 other deploy step and no environment variable the build needs. A merge to `main` is a production
 deploy, so it is the owner's call.
 
